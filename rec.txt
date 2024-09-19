@@ -1,0 +1,60 @@
+ public (float x, float y) CastRay(float castStartX, float castStartY)
+        {
+
+            float rayDirectionX = 1 * MathF.Cos(playerRotationG * MathF.PI / 180);
+            float rayDirectionY = 1 * MathF.Sin(playerRotationG * MathF.PI / 180);
+
+
+            if (MathF.Abs(rayDirectionX) < 0.0015f && Math.Abs(rayDirectionX) > 0)
+            {
+                rayDirectionX = 0.00f;
+
+            }
+
+            if (MathF.Abs(rayDirectionY) < 0.0015f && MathF.Abs(rayDirectionY) > 0)
+            {
+                rayDirectionY = 0.00f;
+            }
+
+            //Ob Positiv oder Negativ
+            float rayX = rayDirectionX > 0 ? 1 : -1;
+            float rayY = rayDirectionY > 0 ? -1 : +1;
+
+            float distanceCellWallX = rayX > 0 ? cellsize - (castStartX % cellsize) : -(castStartX % cellsize);
+            float distanceCellWallY = rayY > 0 ? cellsize - (castStartY % cellsize) : (castStartY % cellsize);
+
+            //Calc Y
+            float castHitY = castStartY + distanceCellWallY;
+            float castHitXShift  = distanceCellWallY * rayDirectionY * rayX;
+
+            //Calc X
+            float castHitX = castStartX + distanceCellWallX;
+            float castHitYShift = distanceCellWallX * rayDirectionX * rayY;
+
+            bool checkX = (castHitXShift > castHitYShift && castHitYShift != 0);
+            
+
+            if (castHitY % cellsize == 0 && !checkX)
+            {
+                if (RayCheckWall(castStartX, castHitY + 1 * rayY))
+                {
+                    return (castStartX, castHitY);
+                }
+                else
+                {
+                    return CastRay(castStartX, castHitY + 1 * rayY);
+                }
+            }
+            else if (castHitX % cellsize == 0)
+            {
+                if (RayCheckWall(castHitX + 1 * rayX, castStartY))
+                {
+                    return (castHitX, castHitY + castHitYShift);
+                }
+                else
+                {
+                    return CastRay(castHitX + 1 * rayX, castHitY + castHitYShift);
+                }
+            }
+            return CastRay(0, 0);
+        }
