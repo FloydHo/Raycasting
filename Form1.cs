@@ -105,8 +105,8 @@ namespace Raycasting
         {
             if (castStartX - playerX > 200 || castStartY - playerY > 200) return (0, 0);
 
-            float rayDirectionX = MathF.Cos(playerRotation);
-            float rayDirectionY = MathF.Sin(playerRotation);
+            float rayDirectionX = 1 * MathF.Sin(playerRotation);
+            float rayDirectionY = 1 * MathF.Sin(MathF.PI/2 - (playerRotation));
 
 
             if (rayDirectionX < 0.0001f && rayDirectionX > 0)
